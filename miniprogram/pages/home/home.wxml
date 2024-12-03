@@ -1,0 +1,5 @@
+<view class="container">
+  <button class="weigh-btn" bindtap="onWeighTap">
+    称重
+  </button>
+</view> 
