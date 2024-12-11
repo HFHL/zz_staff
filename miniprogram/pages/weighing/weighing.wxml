@@ -1,0 +1,32 @@
+<view class="container">
+  <!-- 设备列表 -->
+  <view class="device-list" wx:if="{{!connected}}">
+    <view class="title">可用设备</view>
+    <view class="device-item" wx:for="{{devices}}" wx:key="deviceId" bindtap="connectDevice" data-device-id="{{item.deviceId}}">
+      <view class="device-info">
+        <view class="device-name">{{item.name || item.localName || '未知设备'}}</view>
+        <view class="device-id">ID: {{item.deviceId}}</view>
+      </view>
+      <view class="signal-strength">信号: {{item.RSSI}}dBm</view>
+    </view>
+  </view>
+
+  <!-- 称重显示 -->
+  <view class="weighing-display" wx:if="{{connected}}">
+    <view class="weight-info">
+      <view class="device-number">设备号: {{deviceNumber}}</view>
+      <view class="weight-value">{{weight}} kg</view>
+      <view class="battery-level">电量: {{batteryLevel}}/4</view>
+    </view>
+
+    <!-- 打印机状态 -->
+    <view class="printer-status">
+      <view class="status-text">打印机状态: {{printerStatus}}</view>
+    </view>
+
+    <!-- 打印按钮 -->
+    <button class="print-btn" bindtap="printWeight" disabled="{{!printerConnected}}">
+      打印重量信息
+    </button>
+  </view>
+</view>

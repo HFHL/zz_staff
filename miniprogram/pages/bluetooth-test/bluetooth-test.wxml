@@ -1,0 +1,57 @@
+<view class="container">
+  <view class="header">
+    <view class="title">蓝牙设备</view>
+    <view class="scan-status">{{scanning ? '搜索中...' : '未搜索'}}</view>
+  </view>
+
+  <!-- 称重设备列表 -->
+  <view class="section">
+    <view class="section-title">称重设备</view>
+    <view class="device-list">
+      <block wx:if="{{devices.scales.length > 0}}">
+        <view class="device-item" 
+              wx:for="{{devices.scales}}" 
+              wx:key="deviceId"
+              data-device-id="{{item.deviceId}}"
+              data-type="scale"
+              bindtap="connectDevice">
+          <view class="device-info">
+            <view class="device-name">{{item.name || item.localName}}</view>
+            <view class="device-id">ID: {{item.deviceId}}</view>
+            <view class="device-rssi">信号强度: {{item.RSSI}}dBm</view>
+          </view>
+          <view class="device-connect">连接</view>
+        </view>
+      </block>
+      <view wx:else class="no-devices">未发现称重设备</view>
+    </view>
+  </view>
+
+  <!-- 打印机列表 -->
+  <view class="section">
+    <view class="section-title">打印机</view>
+    <view class="device-list">
+      <block wx:if="{{devices.printers.length > 0}}">
+        <view class="device-item" 
+              wx:for="{{devices.printers}}" 
+              wx:key="deviceId"
+              data-device-id="{{item.deviceId}}"
+              data-type="printer"
+              bindtap="connectDevice">
+          <view class="device-info">
+            <view class="device-name">{{item.name || item.localName}}</view>
+            <view class="device-id">ID: {{item.deviceId}}</view>
+            <view class="device-rssi">信号强度: {{item.RSSI}}dBm</view>
+          </view>
+          <view class="device-connect">连接</view>
+        </view>
+      </block>
+      <view wx:else class="no-devices">未发现打印机</view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <button class="scan-btn" bindtap="startBluetoothDevicesDiscovery" wx:if="{{!scanning}}">开始搜索</button>
+    <button class="scan-btn scanning" bindtap="stopBluetoothDevicesDiscovery" wx:else>停止搜索</button>
+  </view>
+</view>

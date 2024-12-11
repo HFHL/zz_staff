@@ -3,6 +3,8 @@
 Thumbs.db
 $RECYCLE.BIN/
 
+BLESerialPort
+
 # macOS
 .DS_Store
 .fseventsd

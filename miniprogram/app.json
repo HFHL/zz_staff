@@ -1,15 +1,30 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/login",
+    "pages/bluetooth-test/bluetooth-test",
     "pages/home/home",
-    "pages/logs/logs"
+    "pages/weighing/weighing"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarBackgroundColor": "#ffffff"
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "称重助手",
+    "navigationBarTextStyle": "black"
   },
   "style": "v2",
+  "sitemapLocation": "sitemap.json",
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "permission": {
+    "scope.bluetooth": {
+      "desc": "蓝牙功能用于连接打印设备"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation",
+    "startLocationUpdate",
+    "onLocationChange",
+    "chooseAddress"
+  ]
 }

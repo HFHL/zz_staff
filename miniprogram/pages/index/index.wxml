@@ -1,21 +1,17 @@
 <!--index.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="title">渣点员工</view>
-    
-    <view class="login-box">
-      <input class="phone-input" 
-             type="number" 
-             maxlength="11" 
-             placeholder="请输入手机号" 
-             bindinput="onPhoneInput"
-             value="{{phone}}" />
-      
-      <button class="login-btn" 
-              bindtap="handleLogin"
-              loading="{{loading}}">
-        登录
-      </button>
+    <view class="header">
+      <text class="welcome">欢迎使用</text>
+    </view>
+
+    <view class="button-group">
+      <button class="btn" bindtap="onBluetoothTest">蓝牙测试</button>
     </view>
   </view>
 </scroll-view>
+const services = await bleManager.getBLEDeviceServices(deviceId);
+// 遍历服务找到可写的特征值const services = await bleManager.getBLEDeviceServices(deviceId);
+// 遍历服务找到可写的特征值const services = await bleManager.getBLEDeviceServices(deviceId);
+// 遍历服务找到可写的特征值const services = await bleManager.getBLEDeviceServices(deviceId);
+// 遍历服务找到可写的特征值

@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="header">
+    <text class="title">员工登录</text>
+  </view>
+
+  <view class="login-form">
+    <view class="input-group">
+      <text class="label">账号</text>
+      <input class="input" type="text" placeholder="请输入账号" model:value="{{username}}" />
+    </view>
+    
+    <view class="input-group">
+      <text class="label">密码</text>
+      <input class="input" type="password" placeholder="请输入密码" model:value="{{password}}" />
+    </view>
+
+    <button class="login-btn" bindtap="handleLogin">登 录</button>
+  </view>
+</view>

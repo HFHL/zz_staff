@@ -1,4 +1,7 @@
 // app.ts
+import './utils/util';
+import './utils/data-utils';
+
 App<IAppOption>({
   globalData: {},
   onLaunch() {

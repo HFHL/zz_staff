@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="header">
+    <text class="title">选择设备</text>
+    <text class="subtitle">正在搜索附近的称重设备...</text>
+  </view>
+
+  <view class="device-list">
+    <block wx:if="{{devices.length > 0}}">
+      <view class="device-item" 
+            wx:for="{{devices}}" 
+            wx:key="deviceId"
+            bindtap="onDeviceSelect"
+            data-device="{{item}}">
+        <view class="device-info">
+          <text class="device-name">{{item.name}}</text>
+          <text class="device-id">设备ID: {{item.deviceId}}</text>
+        </view>
+        <view class="signal-strength {{item.RSSI > -70 ? 'strong' : item.RSSI > -90 ? 'medium' : 'weak'}}">
+          <text class="signal-text">信号强度</text>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty-state" wx:else>
+      <text>正在搜索设备...</text>
+    </view>
+  </view>
+</view>

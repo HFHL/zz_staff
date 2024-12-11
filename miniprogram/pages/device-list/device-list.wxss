@@ -1,0 +1,90 @@
+.container {
+  padding: 20rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 30rpx 0;
+  text-align: center;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+}
+
+.device-list {
+  padding: 20rpx;
+}
+
+.device-item {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.device-info {
+  flex: 1;
+}
+
+.device-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.device-id {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.signal-strength {
+  width: 120rpx;
+  text-align: center;
+  padding: 10rpx;
+  border-radius: 8rpx;
+}
+
+.signal-text {
+  font-size: 24rpx;
+  display: block;
+}
+
+.strong {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.medium {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.weak {
+  background: #ffebee;
+  color: #f44336;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}

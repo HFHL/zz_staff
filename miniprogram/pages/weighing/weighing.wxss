@@ -1,0 +1,98 @@
+.container {
+  padding: 20rpx;
+}
+
+.device-list {
+  width: 100%;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.device-item {
+  background: #f8f8f8;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  border-radius: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.device-info {
+  flex: 1;
+}
+
+.device-name {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.device-id {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 8rpx;
+}
+
+.signal-strength {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.weighing-display {
+  width: 100%;
+  padding: 40rpx;
+  text-align: center;
+}
+
+.weight-info {
+  background: #fff;
+  padding: 40rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+  margin-bottom: 40rpx;
+}
+
+.device-number {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.weight-value {
+  font-size: 80rpx;
+  font-weight: bold;
+  color: #333;
+  margin: 40rpx 0;
+}
+
+.battery-level {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.printer-status {
+  margin: 40rpx 0;
+}
+
+.status-text {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.print-btn {
+  width: 80%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #007AFF;
+  color: #fff;
+  border-radius: 44rpx;
+  margin-top: 40rpx;
+}
+
+.print-btn[disabled] {
+  background: #ccc;
+}
