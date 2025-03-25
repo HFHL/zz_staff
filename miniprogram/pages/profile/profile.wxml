@@ -1,0 +1,31 @@
+<view class="container">
+  <view class="header">
+    <view class="avatar-container">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+    </view>
+    <view class="user-info">
+      <text class="nickname">{{userInfo.nickName}}</text>
+    </view>
+  </view>
+
+  <view class="info-section">
+    <view class="section-title">个人信息</view>
+    <view class="info-item">
+      <text class="label">微信昵称</text>
+      <text class="value">{{userInfo.nickName}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">性别</text>
+      <text class="value">{{userInfo.gender === 1 ? '男' : (userInfo.gender === 2 ? '女' : '未知')}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">登录时间</text>
+      <text class="value">{{loginTime}}</text>
+    </view>
+  </view>
+
+  <view class="action-section">
+    <button class="action-btn weighing-btn" bindtap="goToWeighing">称重页面</button>
+    <button class="action-btn logout-btn" bindtap="handleLogout">退出登录</button>
+  </view>
+</view> 

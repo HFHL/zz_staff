@@ -1,19 +1,18 @@
 <view class="container">
   <view class="header">
-    <text class="title">员工登录</text>
+    <text class="title">称重助手</text>
+    <text class="subtitle">欢迎使用</text>
   </view>
 
-  <view class="login-form">
-    <view class="input-group">
-      <text class="label">账号</text>
-      <input class="input" type="text" placeholder="请输入账号" model:value="{{username}}" />
-    </view>
-    
-    <view class="input-group">
-      <text class="label">密码</text>
-      <input class="input" type="password" placeholder="请输入密码" model:value="{{password}}" />
-    </view>
-
-    <button class="login-btn" bindtap="handleLogin">登 录</button>
+  <view class="userinfo">
+    <block wx:if="{{!hasUserInfo}}">
+      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile">获取头像昵称</button>
+      <button wx:else open-type="getUserInfo" bindgetuserinfo="getUserInfo">获取头像昵称</button>
+    </block>
+    <block wx:else>
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      <button class="continue-btn" bindtap="continueToApp">继续使用</button>
+    </block>
   </view>
 </view>

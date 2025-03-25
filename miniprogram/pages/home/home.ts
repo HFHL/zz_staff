@@ -8,8 +8,8 @@ Component({
   lifetimes: {
     attached() {
       // 页面加载时检查是否登录
-      const phone = wx.getStorageSync('userPhone')
-      if (!phone) {
+      const userInfo = wx.getStorageSync('userInfo')
+      if (!userInfo) {
         // 如果没有登录，跳转到登录页
         wx.redirectTo({
           url: '/pages/index/index'

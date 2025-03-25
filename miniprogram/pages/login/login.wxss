@@ -1,26 +1,149 @@
 .container {
-  min-height: 100vh;
-  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 40rpx;
+  height: 100vh;
+  background-color: #f8f8f8;
 }
 
 .header {
-  text-align: center;
   margin-bottom: 60rpx;
-  padding-top: 100rpx;
+  margin-top: 80rpx;
+  text-align: center;
 }
 
 .title {
   font-size: 48rpx;
   font-weight: bold;
   color: #333;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 32rpx;
+  color: #666;
+}
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.userinfo button {
+  margin-top: 20rpx;
+  background-color: #07c160;
+  color: white;
+  font-size: 32rpx;
+  padding: 0 40rpx;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.userinfo-nickname {
+  color: #333;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin: 20rpx 0;
+}
+
+.continue-btn {
+  margin-top: 40rpx;
+  background-color: #1aad19;
+  color: #fff;
+  font-size: 32rpx;
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
 }
 
 .login-form {
-  background: #fff;
-  padding: 40rpx;
+  width: 100%;
+  background-color: #fff;
   border-radius: 16rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  padding: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-container {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 60rpx;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+}
+
+.wechat-login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wechat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #07c160;
+  color: white;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  padding: 20rpx 0;
+  width: 100%;
+}
+
+.wechat-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 10rpx;
+}
+
+.login-tip {
+  margin-top: 30rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.version-tip {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #ff9500;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 30rpx 0;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.text {
+  padding: 0 20rpx;
+  color: #999;
+  font-size: 28rpx;
 }
 
 .input-group {
@@ -31,28 +154,30 @@
   display: block;
   font-size: 28rpx;
   color: #666;
-  margin-bottom: 16rpx;
+  margin-bottom: 10rpx;
 }
 
 .input {
   width: 100%;
-  height: 88rpx;
-  background: #f5f5f5;
+  height: 80rpx;
+  border: 1rpx solid #ddd;
   border-radius: 8rpx;
-  padding: 0 24rpx;
-  font-size: 32rpx;
-  color: #333;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
 }
 
 .login-btn {
   width: 100%;
   height: 88rpx;
-  line-height: 88rpx;
-  background: #1890ff;
+  background-color: #1aad19;
   color: #fff;
   font-size: 32rpx;
-  border-radius: 44rpx;
-  margin-top: 60rpx;
+  border-radius: 8rpx;
+  margin-top: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-btn:active {

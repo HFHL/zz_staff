@@ -1,32 +1,109 @@
-<view class="container">
-  <!-- 设备列表 -->
-  <view class="device-list" wx:if="{{!connected}}">
-    <view class="title">可用设备</view>
-    <view class="device-item" wx:for="{{devices}}" wx:key="deviceId" bindtap="connectDevice" data-device-id="{{item.deviceId}}">
-      <view class="device-info">
-        <view class="device-name">{{item.name || item.localName || '未知设备'}}</view>
-        <view class="device-id">ID: {{item.deviceId}}</view>
-      </view>
-      <view class="signal-strength">信号: {{item.RSSI}}dBm</view>
+<view class="page">
+  <!-- 选择器区域 -->
+  <view class="selectors-section">
+    <!-- 员工选择器 -->
+    <view class="selector-item">
+      <text class="section-title">员工:</text>
+      <picker 
+        bindchange="handleEmployeeChange" 
+        value="{{selectedEmployeeIndex}}" 
+        range="{{employees}}"
+        class="picker">
+        <view class="picker-content">
+          {{selectedEmployee || '请选择员工'}}
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 品类选择器 -->
+    <view class="selector-item">
+      <text class="section-title">品类:</text>
+      <picker 
+        bindchange="handleCategoryChange" 
+        value="{{selectedCategoryIndex}}" 
+        range="{{categories}}"
+        class="picker">
+        <view class="picker-content">
+          {{selectedCategory || '请选择品类'}}
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
     </view>
   </view>
 
-  <!-- 称重显示 -->
-  <view class="weighing-display" wx:if="{{connected}}">
-    <view class="weight-info">
-      <view class="device-number">设备号: {{deviceNumber}}</view>
-      <view class="weight-value">{{weight}} kg</view>
-      <view class="battery-level">电量: {{batteryLevel}}/4</view>
+  <!-- 主内容区域 -->
+  <view class="main-content">
+    <!-- 设备列表 -->
+    <view class="device-section">
+      <view class="section-title">可用设备</view>
+      <mp-cells>
+        <mp-cell wx:for="{{devices}}" wx:key="deviceId">
+          <view class="device-item" bindtap="showDeviceActions" data-device-id="{{item.deviceId}}">
+            <view class="device-info">
+              <view class="device-header">
+                <text class="device-name">{{item.name || '未知设备'}}</text>
+                <text class="device-category" wx:if="{{item.category}}">{{item.category}}</text>
+              </view>
+              <text class="device-id">ID: {{item.deviceId}}</text>
+            </view>
+            <view class="device-status">
+              <text class="weight">{{item.weight || '---'}} kg</text>
+              <text class="battery">电量: {{item.batteryLevel || '---'}}/4</text>
+              <text class="status {{item.connected ? 'connected' : ''}}">
+                {{item.connected ? '已连接' : '未连接'}}
+              </text>
+            </view>
+          </view>
+        </mp-cell>
+      </mp-cells>
+    </view>
+  </view>
+
+  <!-- 操作菜单弹窗 -->
+  <view class="action-sheet" wx:if="{{showActionSheet}}" bindtap="hideActionSheet">
+    <view class="action-sheet-content" catchtap="preventDefault">
+      <view class="action-sheet-header">设备操作</view>
+      <view class="action-item" bindtap="handleZero">置零</view>
+      <view class="action-item delete" bindtap="handleDelete">删除</view>
+      <view class="action-item cancel" bindtap="hideActionSheet">取消</view>
+    </view>
+  </view>
+
+  <!-- 底部控制栏 -->
+  <view class="footer">
+    <!-- 打印机状态与控制 -->
+    <view class="printer-controls">
+      <view class="printer-info">
+        <text class="status-text">打印机: {{printerStatus}}</text>
+        <button class="control-btn printer-btn" bindtap="connectPrinter" wx:if="{{!printerConnected}}">连接</button>
+        <button class="control-btn printer-btn" bindtap="disconnectPrinter" wx:if="{{printerConnected}}">断开</button>
+      </view>
     </view>
 
-    <!-- 打印机状态 -->
-    <view class="printer-status">
-      <view class="status-text">打印机状态: {{printerStatus}}</view>
+    <!-- 分隔线 -->
+    <view class="divider"></view>
+
+    <!-- 重量显示与操作区 -->
+    <view class="bottom-section">
+      <!-- 重量和金额信息 -->
+      <view class="total-info">
+        <view class="info-item">
+          <text class="label">总重量:</text>
+          <text class="value">{{totalWeight}} kg</text>
+        </view>
+        <view class="info-item">
+          <text class="label">总金额:</text>
+          <text class="value amount">{{totalAmount}} 元</text>
+        </view>
+      </view>
     </view>
 
-    <!-- 打印按钮 -->
-    <button class="print-btn" bindtap="printWeight" disabled="{{!printerConnected}}">
-      打印重量信息
-    </button>
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="control-btn print-btn" bindtap="printWeight">打印</button>
+      <button class="control-btn refresh-btn" bindtap="onRefresh">刷新</button>
+      <button class="control-btn profile-btn" bindtap="goToProfile">个人中心</button>
+    </view>
   </view>
 </view>

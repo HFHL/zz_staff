@@ -6,111 +6,132 @@ interface PageData {
     printers: WechatMiniprogram.BlueToothDevice[];
   };
   scanning: boolean;
+  printerConnected: boolean;
+  searchingPrinter: boolean;
 }
 
-Page<PageData>({
+Page<PageData, WechatMiniprogram.IAnyObject>({
   data: {
     devices: {
       scales: [],
       printers: []
     },
-    scanning: false
+    scanning: false,
+    printerConnected: false,
+    searchingPrinter: false
   },
+
+  bleManager: new BLEManager(),
+  searchTimeout: null as any,
 
   onLoad() {
     this.initBluetooth();
   },
 
   onUnload() {
-    // 页面卸载时清理蓝牙状态
     this.cleanupBluetooth();
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
   },
 
-  // 初始化蓝牙
   async initBluetooth() {
     try {
-      // 先关闭蓝牙模块，确保状态清理
-      await wx.closeBluetoothAdapter();
-      
-      // 等待一下再初始化
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // 初始化蓝牙模块
-      await wx.openBluetoothAdapter();
-      console.log('蓝牙初始化成功');
-
-      // 停止可能正在进行的搜索
-      await this.stopBluetoothDevicesDiscovery();
-      
-      // 开始搜索设备
-      await this.startBluetoothDevicesDiscovery();
+      const res = await wx.openBluetoothAdapter();
+      console.log('Bluetooth adapter opened:', res);
+      this.startSearchingPrinter();
     } catch (error) {
-      console.error('蓝牙初始化失败:', error);
-      if (error.errCode === 10001) {
-        wx.showToast({
-          title: '请打开蓝牙',
-          icon: 'none'
-        });
-      } else {
-        wx.showToast({
-          title: '蓝牙初始化失败',
-          icon: 'none'
-        });
-      }
+      console.error('Failed to initialize Bluetooth:', error);
+      wx.showToast({
+        title: '请打开蓝牙',
+        icon: 'error'
+      });
     }
   },
 
-  // 清理蓝牙状态
-  async cleanupBluetooth() {
-    try {
-      // 先停止搜索
-      await this.stopBluetoothDevicesDiscovery();
-      // 关闭蓝牙模块
-      await wx.closeBluetoothAdapter();
-    } catch (error) {
-      console.error('清理蓝牙状态失败:', error);
-    }
-  },
-
-  // 开始搜索设备
-  async startBluetoothDevicesDiscovery() {
-    if (this.data.scanning) {
-      console.log('已经在搜索中');
+  async startSearchingPrinter() {
+    if (this.data.printerConnected) {
       return;
     }
 
     try {
+      this.setData({ searchingPrinter: true });
       await wx.startBluetoothDevicesDiscovery({
-        services: ['FFF0'],  // 打印机的服务 UUID
-        allowDuplicatesKey: true,
-        interval: 200,
-        powerLevel: "high"
+        allowDuplicatesKey: false,
       });
-
-      this.setData({ scanning: true });
-      console.log('开始搜索设备');
       this.onBluetoothDeviceFound();
+      this.searchTimeout = setTimeout(async () => {
+        if (!this.data.printerConnected) {
+          await wx.stopBluetoothDevicesDiscovery();
+          this.setData({ searchingPrinter: false });
+          setTimeout(() => this.startSearchingPrinter(), 3000);
+        }
+      }, 30000);
     } catch (error) {
-      console.error('搜索设备失败:', error);
-      this.setData({ scanning: false });
-      
-      if (error.errMsg.includes('already discovering')) {
-        // 如果已经在搜索，先停止再重新开始
-        await this.stopBluetoothDevicesDiscovery();
-        await new Promise(resolve => setTimeout(resolve, 500));
-        await this.startBluetoothDevicesDiscovery();
-      }
+      console.error('搜索蓝牙设备失败:', error);
+      this.setData({ searchingPrinter: false });
+      setTimeout(() => this.startSearchingPrinter(), 3000);
     }
   },
 
-  // 停止搜索设备
-  async stopBluetoothDevicesDiscovery() {
-    try {
-      await wx.stopBluetoothDevicesDiscovery();
-      this.setData({ scanning: false });
-      console.log('停止搜索设备');
-    } catch (error) {
-      console.error('停止搜索失败:', error);
+  cleanupBluetooth() {
+    if (this.data.searchingPrinter) {
+      wx.stopBluetoothDevicesDiscovery();
+    }
+    wx.closeBluetoothAdapter();
+  },
+
+  onBluetoothDeviceFound() {
+    wx.onBluetoothDeviceFound((result) => {
+      const newDevice = result.devices[0];
+      if (this.isPrinterDevice(newDevice)) {
+        const printers = [...this.data.devices.printers];
+        if (!printers.find(device => device.deviceId === newDevice.deviceId)) {
+          printers.push(newDevice);
+          this.setData({
+            'devices.printers': printers
+          });
+          this.tryConnectPrinter();
+        }
+      } else if (this.isScaleDevice(newDevice)) {
+        const scales = [...this.data.devices.scales];
+        if (!scales.find(device => device.deviceId === newDevice.deviceId)) {
+          scales.push(newDevice);
+          this.setData({
+            'devices.scales': scales
+          });
+        }
+      }
+    });
+  },
+
+  async tryConnectPrinter() {
+    if (this.data.printerConnected) return;
+
+    const printers = this.data.devices.printers;
+    if (printers.length > 0) {
+      try {
+        const printer = printers[0];
+        await this.bleManager.createBLEConnection(printer.deviceId);
+        const services = await this.bleManager.getBLEDeviceServices(printer.deviceId);
+        const targetService = services.find((s: WechatMiniprogram.BLEService) => 
+          s.uuid.toUpperCase().includes('FFF0')
+        );
+        if (!targetService) {
+          throw new Error('未找到打印机服务');
+        }
+        const characteristics = await this.bleManager.getBLEDeviceCharacteristics(
+          printer.deviceId, 
+          targetService.uuid
+        );
+        console.log('打印机已连接');
+        this.setData({ printerConnected: true });
+      } catch (error) {
+        console.error('自动连接打印机失败:', error);
+        setTimeout(() => this.tryConnectPrinter(), 3000);
+      }
+    } else {
+      setTimeout(() => this.tryConnectPrinter(), 1000);
     }
   },
 
@@ -122,95 +143,44 @@ Page<PageData>({
   isPrinterDevice(device: WechatMiniprogram.BlueToothDevice): boolean {
     const name = device.name || device.localName || '';
     const rssi = device.RSSI || -100;
-    
-    // 信号强度过滤
     if (rssi < -85 || rssi === 0) return false;
-    
-    // 检查设备名称是否以 HM 开头
     return name.toUpperCase().startsWith('HM');
   },
 
-  onBluetoothDeviceFound() {
-    wx.onBluetoothDeviceFound((res) => {
-      res.devices.forEach(device => {
-        // 只处理有名字的设备
-        if (!device.name && !device.localName) return;
-
-        const { scales, printers } = this.data.devices;
-
-        if (this.isScaleDevice(device)) {
-          // 检查是否已存在该称重设备
-          const idx = scales.findIndex(d => d.deviceId === device.deviceId);
-          if (idx === -1) {
-            // 新设备，添加到列表
-            this.setData({
-              'devices.scales': [...scales, device]
-            });
-          } else {
-            // 更新已有设备的信息
-            scales[idx] = device;
-            this.setData({ 'devices.scales': scales });
-          }
-        } else if (this.isPrinterDevice(device)) {
-          // 检查是否已存在该打印机
-          const idx = printers.findIndex(d => d.deviceId === device.deviceId);
-          if (idx === -1) {
-            // 新设备，添加到列表
-            this.setData({
-              'devices.printers': [...printers, device]
-            });
-          } else {
-            // 更新已有设备的信息
-            printers[idx] = device;
-            this.setData({ 'devices.printers': printers });
-          }
-        }
-      });
-    });
-  },
-
   async connectDevice(e: WechatMiniprogram.Touch) {
-    const deviceId = e.currentTarget.dataset.deviceId;
-    const deviceType = e.currentTarget.dataset.type; // 'scale' 或 'printer'
-    const bleManager = new BLEManager();
-    
+    const dataset = (e.currentTarget as any).dataset;
+    const deviceId = dataset.deviceId;
+    const deviceType = dataset.type;
+
     try {
-      await bleManager.createBLEConnection(deviceId);
-      
+      await this.bleManager.createBLEConnection(deviceId);
       wx.showToast({
         title: '连接成功',
         icon: 'success'
       });
-      
-      // 可以根据设备类型进行不同的处理
-      if (deviceType === 'printer') {
-        // 处理打印机连接后的逻辑
+
+      const services = await this.bleManager.getBLEDeviceServices(deviceId);
+      console.log('Device services:', services);
+
+      if (deviceType === 'scale') {
+        console.log('称重设备已连接');
+      } else if (deviceType === 'printer') {
         console.log('打印机已连接');
-        // 获取服务
-        const services = await bleManager.getBLEDeviceServices(deviceId);
-        
-        // 找到 FFF0 服务
-        const targetService = services.find(s => 
+        this.setData({ printerConnected: true });
+        const targetService = services.find((s: WechatMiniprogram.BLEService) => 
           s.uuid.toUpperCase().includes('FFF0')
         );
-        
         if (!targetService) {
           throw new Error('未找到打印机服务');
         }
-        
-        const characteristics = await bleManager.getBLEDeviceCharacteristics(
+        const characteristics = await this.bleManager.getBLEDeviceCharacteristics(
           deviceId, 
           targetService.uuid
         );
-        
-        // 可以进行打印相关操作
         console.log('打印机特征值:', characteristics);
-      } else if (deviceType === 'scale') {
-        // 处理称重设备连接后的逻辑
-        console.log('称重设备已连接');
       }
     } catch (error) {
-      console.error('连接设备失败:', error);
+      console.error('Failed to connect:', error);
       wx.showToast({
         title: '连接失败',
         icon: 'error'

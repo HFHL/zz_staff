@@ -19,6 +19,10 @@
   font-size: 24rpx;
   color: #666;
   margin-top: 10rpx;
+  padding: 6rpx 20rpx;
+  background: #f0f0f0;
+  border-radius: 20rpx;
+  display: inline-block;
 }
 
 .section {
@@ -79,6 +83,11 @@
   color: #fff;
   border-radius: 30rpx;
   font-size: 26rpx;
+  transition: all 0.3s ease;
+}
+
+.device-connect.connected {
+  background: #52c41a;
 }
 
 .no-devices {
@@ -86,26 +95,4 @@
   color: #999;
   font-size: 28rpx;
   padding: 40rpx 0;
-}
-
-.footer {
-  position: fixed;
-  bottom: 40rpx;
-  left: 0;
-  right: 0;
-  padding: 0 40rpx;
-}
-
-.scan-btn {
-  width: 100%;
-  height: 88rpx;
-  line-height: 88rpx;
-  background: #1890ff;
-  color: #fff;
-  font-size: 32rpx;
-  border-radius: 44rpx;
-}
-
-.scan-btn.scanning {
-  background: #ff4d4f;
 }
